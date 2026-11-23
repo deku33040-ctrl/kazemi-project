@@ -4,8 +4,7 @@ from functools import wraps
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify, abort, send_file
 from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import secure_filename
-from html.parser import HTMLParser
-from markupsafe import Markup
+import bleach
 
 BASE = Path(__file__).resolve().parent
 DB = BASE / 'kazemi.db'
@@ -13,6 +12,8 @@ UPLOAD_DIR = BASE / 'static' / 'uploads'
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 ALLOWED = {'png', 'jpg', 'jpeg', 'webp', 'gif'}
 FONT_ALLOWED = {'woff2','woff','ttf','otf'}
+FONT_DIR = BASE / 'static' / 'fonts'
+FONT_DIR.mkdir(parents=True, exist_ok=True)
 app = Flask(__name__)
 def load_secret_key():
     configured = os.environ.get('SECRET_KEY')
@@ -31,50 +32,18 @@ def load_secret_key():
         return secrets.token_urlsafe(48)
 
 app.secret_key = load_secret_key()
-app.config['MAX_CONTENT_LENGTH'] = 8 * 1024 * 1024
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 app.config.update(SESSION_COOKIE_HTTPONLY=True, SESSION_COOKIE_SAMESITE='Lax')
 LOGIN_ATTEMPTS = {}
 
-class RichTextSanitizer(HTMLParser):
-    ALLOWED_TAGS = {'font','p','br','h2','h3','h4','strong','b','em','i','u','s','ul','ol','li','blockquote','a','img','figure','figcaption','hr','table','thead','tbody','tr','th','td','div','span'}
-    ALLOWED_ATTRS = {'a': {'href','target','rel'}, 'font': {'color','size'}, 'img': {'src','alt','title','width','height'}, 'td': {'colspan','rowspan'}, 'th': {'colspan','rowspan'}, 'p': {'style'}, 'h2': {'style'}, 'h3': {'style'}, 'h4': {'style'}, 'div': {'style'}, 'span': {'style'}, 'img': {'style'}, 'figure': {'style'}}
-    VOID = {'br','hr','img'}
-    def __init__(self):
-        super().__init__(convert_charrefs=True); self.out=[]
-    def handle_starttag(self, tag, attrs):
-        if tag not in self.ALLOWED_TAGS: return
-        clean=[]
-        for k,v in attrs:
-            if k in self.ALLOWED_ATTRS.get(tag,set()) and v is not None and not k.lower().startswith('on'):
-                if k in {'href','src'} and re.match(r'\s*(javascript:|data:)',v,re.I): continue
-                if k == 'style':
-                    safe=[]
-                    for decl in v.split(';'):
-                        if ':' not in decl: continue
-                        prop,val=decl.split(':',1); prop=prop.strip().lower(); val=val.strip()
-                        if prop in {'text-align','width','max-width','height'} and not re.search(r'(url|expression|javascript)',val,re.I): safe.append(f'{prop}:{val}')
-                    if not safe: continue
-                    v=';'.join(safe)
-                clean.append(f'{k}="{str(v).replace(chr(34),"&quot;")}"')
-        if tag=='a': clean += ['rel="noopener noreferrer"']
-        self.out.append('<'+tag+(' '+' '.join(clean) if clean else '')+'>')
-    def handle_endtag(self, tag):
-        if tag in self.ALLOWED_TAGS and tag not in self.VOID: self.out.append('</'+tag+'>')
-    def handle_data(self, data): self.out.append(data.replace('&','&amp;').replace('<','&lt;').replace('>','&gt;'))
-    def html(self): return ''.join(self.out)
-def clean_rich_html(value):
-    parser=RichTextSanitizer(); parser.feed(value or ''); return parser.html()
-
 DEFAULTS = {
  'company':'پیمانکاری کاظمی', 'slogan':'سنگ‌کاری • نما • اجرای ساختمان',
- 'heroText':'پیمانکاری کاظمی؛ همراه مطمئن شما در اجرای سنگ‌کاری، نمای ساختمان و پروژه‌های ساختمانی، از ایده تا تحویل نهایی.', 'hero_heading':'سنگ را با هنر و سازه را با اعتماد بسازید.', 'about_heading':'ساختن فقط اجرا نیست؛ تعهد به نتیجه است.', 'services_heading':'تخصص‌هایی برای ساخت بهتر', 'projects_heading':'نتیجه کار، معرف ماست.', 'contact_heading':'پروژه‌تان را با ما شروع کنید.',
+ 'heroText':'پیمانکاری کاظمی؛ همراه مطمئن شما در اجرای سنگ‌کاری، نمای ساختمان و پروژه‌های ساختمانی، از ایده تا تحویل نهایی.',
  'aboutText':'در پیمانکاری کاظمی، هر پروژه با شناخت نیاز کارفرما، انتخاب مصالح مناسب و برنامه‌ریزی دقیق آغاز می‌شود. هدف ما اجرای تمیز، اصولی و ماندگار است.',
  'quote':'اعتماد با حرف ساخته نمی‌شود؛ با کیفیت کار، ماندگار می‌شود.',
- 'experience':'۱۰+', 'projectsCount':'۷۰+', 'phone':'', 'whatsapp':'', 'telegram':'', 'address':'', 'about_bg_image':'/static/uploads/about-stone-background-user.jpg',
- 'hero_badge':'تخصص، دقت، ماندگاری', 'hero_projects_button':'مشاهده نمونه‌کارها', 'hero_contact_button':'درخواست مشاوره', 'experience_label':'سال تجربه', 'projects_label':'پروژه اجراشده', 'quality_label':'تعهد به کیفیت', 'hero_art_small':'پیمانکاری کاظمی', 'hero_art_title':'کیفیت در جزئیات است', 'about_label':'درباره پیمانکاری کاظمی', 'about_link':'برای شروع همکاری با ما تماس بگیرید', 'services_intro':'خدمات اجرایی با توجه به کیفیت مصالح، دقت نصب و نیاز واقعی هر پروژه.', 'projects_intro':'نمونه‌کارهای واقعی و جزئیات پروژه‌های اجراشده را مشاهده کنید.', 'blog_label':'دانش و تجربه', 'blog_heading':'مجله کاظمی', 'blog_intro':'راهنماها، تجربه‌های اجرایی و نکات کاربردی درباره سنگ‌کاری و ساختمان.', 'contact_label':'تماس و مشاوره', 'contact_intro':'برای دریافت مشاوره، برآورد اولیه یا هماهنگی بازدید از پروژه با ما در تماس باشید.', 'contact_form_title':'درخواست مشاوره', 'contact_form_submit':'ارسال درخواست', 'contact_form_help':'با زدن دکمه، پیام در واتساپ شما آماده ارسال می‌شود.', 'footer_slogan':'سنگ‌کاری • نما • اجرای ساختمان', 'footer_copyright':'تمام حقوق محفوظ است.',
- 'nav_home':'خانه', 'nav_blog':'مجله کاظمی', 'nav_services':'خدمات', 'nav_projects':'نمونه‌کارها', 'nav_about':'درباره ما', 'nav_contact':'تماس با ما', 'services_section_label':'۰۲ / خدمات ما', 'projects_section_label':'۰۳ / پروژه‌ها', 'project_search_label':'جست‌وجوی نمونه‌کار', 'project_search_placeholder':'عنوان یا دسته‌بندی پروژه...', 'project_empty':'نمونه‌کارها پس از ثبت در پنل مدیریت اینجا نمایش داده می‌شوند.', 'blog_empty':'مقاله‌های جدید به‌زودی منتشر می‌شوند.', 'blog_all_button':'مشاهده همه مقاله‌ها', 'custom_section_label':'بخش اختصاصی', 'statement_signature':'پیمانکاری کاظمی', 'phone_label':'شماره تماس', 'whatsapp_label':'واتساپ', 'whatsapp_action':'ارسال پیام در واتساپ', 'address_label':'موقعیت / آدرس', 'address_placeholder':'آدرس محل فعالیت را وارد کنید', 'form_name_label':'نام و نام خانوادگی', 'form_name_placeholder':'نام شما', 'form_phone_label':'شماره تماس', 'form_phone_placeholder':'شماره‌ای که با آن تماس بگیریم', 'form_service_label':'موضوع پروژه', 'form_message_label':'توضیحات پروژه', 'form_message_placeholder':'نوع پروژه، محل و توضیحات کوتاه...', 'form_other':'سایر', 'floating_label':'راه‌های ارتباطی', 'admin_link_label':'ورود مدیر', 'footer_top_label':'بازگشت به بالا', 'hero_scroll_label':'برای مشاهده ادامه صفحه', 'project_image_placeholder':'تصویر پروژه', 'blog_read_more':'ادامه مطلب', 'quality_number':'۱۰۰٪', 'header_call_label':'تماس و مشاوره', 'project_search_aria':'جست‌وجوی نمونه‌کار', 'project_reading_label':'مشاهده جزئیات پروژه',
+ 'experience':'۱۰+', 'projectsCount':'۷۰+', 'phone':'', 'address':'',
  'seo_title':'پیمانکاری کاظمی | سنگ‌کاری و اجرای ساختمان',
- 'seo_description':'اجرای تخصصی سنگ‌کاری، نمای ساختمان، بازسازی و پیمانکاری ساختمان در ایران.', 'accent_color':'#c7a46b', 'home_projects_limit':'12', 'seo_city':'', 'visual_layout':'{}'
+ 'seo_description':'اجرای تخصصی سنگ‌کاری، نمای ساختمان، بازسازی و پیمانکاری ساختمان در ایران.', 'accent_color':'#c7a46b', 'home_projects_limit':'12', 'seo_city':'', 'visual_layout':'{}', 'custom_font':'', 'about_bg_image':'', 'statement_bg_image':'', 'maker_text':'MADE BY DEKU', 'maker_url':'#'
 }
 
 def db():
@@ -208,7 +177,7 @@ def blog_detail(slug):
     with db() as con:
         post = con.execute('SELECT * FROM blog_posts WHERE slug=? AND is_published=1', (slug,)).fetchone()
     if not post: abort(404)
-    return render_template('blog_detail.html', post={**dict(post), 'content': Markup(clean_rich_html(post['content']))}, settings=get_settings())
+    return render_template('blog_detail.html', post=post, settings=get_settings())
 
 @app.get('/robots.txt')
 def robots():
@@ -329,26 +298,6 @@ def save_visual_builder():
     flash('چیدمان و ظاهر سایت ذخیره شد.','success')
     return redirect(url_for('visual_builder'))
 
-@app.get('/admin/posts')
-@admin_required
-def admin_posts():
-    with db() as con:
-        posts=con.execute('SELECT * FROM blog_posts ORDER BY created_at DESC,id DESC').fetchall()
-    return render_template('admin_posts.html', posts=posts)
-
-@app.get('/admin/posts/new')
-@admin_required
-def admin_post_new():
-    return render_template('admin_post_editor.html', post=None)
-
-@app.get('/admin/posts/<int:post_id>/edit')
-@admin_required
-def admin_post_edit(post_id):
-    with db() as con:
-        post=con.execute('SELECT * FROM blog_posts WHERE id=?',(post_id,)).fetchone()
-    if not post: abort(404)
-    return render_template('admin_post_editor.html', post=post)
-
 def make_slug(value):
     value = re.sub(r'[^\w\u0600-\u06FF-]+', '-', value.strip().lower()).strip('-')
     return value[:70] or secrets.token_hex(4)
@@ -423,59 +372,103 @@ def delete_page(pid):
     flash('صفحه حذف شد.','success')
     return redirect(url_for('admin_dashboard')+'#pages')
 
+
+
+def clean_rich_html(value):
+    allowed_tags = {'p','br','strong','b','em','i','u','h2','h3','h4','ul','ol','li','blockquote','a','img','hr'}
+    allowed_attrs = {'a':['href','title','target','rel'], 'img':['src','alt','title','width','height']}
+    cleaned = bleach.clean(value or '', tags=allowed_tags, attributes=allowed_attrs,
+                           protocols={'http','https','mailto'}, strip=True)
+    return bleach.linkifier.Linker().linkify(cleaned)
+
+@app.post('/admin/blog/inline-image')
+@admin_required
+def upload_blog_inline_image():
+    f = request.files.get('image')
+    try:
+        url = save_upload(f)
+    except ValueError as e:
+        return jsonify({'error':str(e)}), 400
+    if not url:
+        return jsonify({'error':'فایلی انتخاب نشده است.'}), 400
+    return jsonify({'url':url})
+
+def unique_blog_slug(raw, exclude_id=None):
+    base = make_slug(raw)
+    candidate = base
+    n = 2
+    with db() as con:
+        while True:
+            row = con.execute('SELECT id FROM blog_posts WHERE slug=?', (candidate,)).fetchone()
+            if not row or (exclude_id is not None and row['id'] == exclude_id):
+                return candidate
+            candidate = f'{base}-{n}'
+            n += 1
+
+@app.get('/admin/blog/new')
+@admin_required
+def new_blog_post():
+    return render_template('admin_post_editor.html', post=None, action=url_for('add_blog_post'))
+
+@app.get('/admin/blog/<int:post_id>/edit')
+@admin_required
+def blog_post_editor(post_id):
+    with db() as con:
+        post = con.execute('SELECT * FROM blog_posts WHERE id=?', (post_id,)).fetchone()
+    if not post: abort(404)
+    return render_template('admin_post_editor.html', post=post, action=url_for('edit_blog_post', post_id=post_id))
+
 @app.post('/admin/blog/add')
 @admin_required
 def add_blog_post():
     title = request.form.get('title','').strip()[:180]
-    content = clean_rich_html(request.form.get('content','').strip()[:30000])
+    content = clean_rich_html(request.form.get('content','').strip()[:50000])
     excerpt = request.form.get('excerpt','').strip()[:500]
-    slug = make_slug(request.form.get('slug') or title)
     meta = request.form.get('meta_description','').strip()[:300]
-    published = 1 if request.form.get('is_published') == 'on' else 0
+    slug = unique_blog_slug(request.form.get('slug') or title)
+    published = 1 if request.form.get('is_published') in ('on','1','true') else 0
     if not title or not content:
         flash('عنوان و متن مقاله الزامی است.','error')
-        return redirect(url_for('admin_posts'))
+        return redirect(url_for('new_blog_post'))
     try:
         image = save_upload(request.files.get('image'))
     except ValueError as e:
         flash(str(e),'error')
-        return redirect(url_for('admin_posts'))
-    try:
-        with db() as con:
-            con.execute('INSERT INTO blog_posts(title,slug,excerpt,content,image,meta_description,is_published) VALUES(?,?,?,?,?,?,?)',
-                        (title,slug,excerpt,content,image,meta,published))
-        flash('مقاله ذخیره شد.','success')
-    except sqlite3.IntegrityError:
-        flash('این نشانی مقاله قبلاً استفاده شده است.','error')
-    return redirect(url_for('admin_posts'))
+        return redirect(url_for('new_blog_post'))
+    with db() as con:
+        con.execute('INSERT INTO blog_posts(title,slug,excerpt,content,image,meta_description,is_published) VALUES(?,?,?,?,?,?,?)',
+                    (title,slug,excerpt,content,image,meta,published))
+    flash('مقاله با موفقیت ذخیره شد.','success')
+    return redirect(url_for('admin_dashboard')+'#blog')
 
 @app.post('/admin/blog/<int:post_id>/edit')
 @admin_required
 def edit_blog_post(post_id):
     title = request.form.get('title','').strip()[:180]
-    content = clean_rich_html(request.form.get('content','').strip()[:30000])
+    content = clean_rich_html(request.form.get('content','').strip()[:50000])
     excerpt = request.form.get('excerpt','').strip()[:500]
     meta = request.form.get('meta_description','').strip()[:300]
-    published = 1 if request.form.get('is_published') == 'on' else 0
+    published = 1 if request.form.get('is_published') in ('on','1','true') else 0
     if not title or not content:
         flash('عنوان و متن مقاله الزامی است.','error')
-        return redirect(url_for('admin_posts'))
+        return redirect(url_for('blog_post_editor', post_id=post_id))
     try:
         image = save_upload(request.files.get('image'))
     except ValueError as e:
         flash(str(e),'error')
-        return redirect(url_for('admin_posts'))
+        return redirect(url_for('blog_post_editor', post_id=post_id))
     with db() as con:
-        old = con.execute('SELECT image FROM blog_posts WHERE id=?',(post_id,)).fetchone()
+        old = con.execute('SELECT id FROM blog_posts WHERE id=?',(post_id,)).fetchone()
         if not old: abort(404)
+        slug = unique_blog_slug(request.form.get('slug') or title, exclude_id=post_id)
         if image:
-            con.execute('UPDATE blog_posts SET title=?,excerpt=?,content=?,image=?,meta_description=?,is_published=?,updated_at=CURRENT_TIMESTAMP WHERE id=?',
-                        (title,excerpt,content,image,meta,published,post_id))
+            con.execute('UPDATE blog_posts SET title=?,slug=?,excerpt=?,content=?,image=?,meta_description=?,is_published=?,updated_at=CURRENT_TIMESTAMP WHERE id=?',
+                        (title,slug,excerpt,content,image,meta,published,post_id))
         else:
-            con.execute('UPDATE blog_posts SET title=?,excerpt=?,content=?,meta_description=?,is_published=?,updated_at=CURRENT_TIMESTAMP WHERE id=?',
-                        (title,excerpt,content,meta,published,post_id))
+            con.execute('UPDATE blog_posts SET title=?,slug=?,excerpt=?,content=?,meta_description=?,is_published=?,updated_at=CURRENT_TIMESTAMP WHERE id=?',
+                        (title,slug,excerpt,content,meta,published,post_id))
     flash('مقاله ویرایش شد.','success')
-    return redirect(url_for('admin_posts'))
+    return redirect(url_for('admin_dashboard')+'#blog')
 
 @app.post('/admin/blog/<int:post_id>/delete')
 @admin_required
@@ -488,39 +481,54 @@ def delete_blog_post(post_id):
                 try: (BASE / row['image'].lstrip('/')).unlink(missing_ok=True)
                 except OSError: pass
     flash('مقاله حذف شد.','success')
-    return redirect(url_for('admin_posts'))
+    return redirect(url_for('admin_dashboard')+'#blog')
+
+
+@app.post('/admin/site-image/<field>')
+@admin_required
+def upload_site_image(field):
+    if field not in {'about_bg_image','statement_bg_image'}: abort(404)
+    try:
+        image = save_upload(request.files.get('image'))
+    except ValueError as e:
+        flash(str(e),'error')
+        return redirect(url_for('admin_dashboard')+'#settings')
+    if not image:
+        flash('فایل تصویر انتخاب نشده است.','error')
+    else:
+        with db() as con:
+            con.execute('INSERT INTO settings(key,value) VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value',(field,image))
+        flash('تصویر پس‌زمینه ذخیره شد.','success')
+    return redirect(url_for('admin_dashboard')+'#settings')
+
+@app.post('/admin/font')
+@admin_required
+def upload_font():
+    f = request.files.get('font_file')
+    if not f or not f.filename:
+        flash('ابتدا فایل فونت را انتخاب کنید.','error')
+        return redirect(url_for('admin_dashboard')+'#settings')
+    ext = f.filename.rsplit('.',1)[-1].lower() if '.' in f.filename else ''
+    if ext not in FONT_ALLOWED:
+        flash('فرمت فونت باید WOFF2، WOFF، TTF یا OTF باشد.','error')
+        return redirect(url_for('admin_dashboard')+'#settings')
+    name = secrets.token_hex(12)+'.'+ext
+    f.save(FONT_DIR/name)
+    with db() as con:
+        con.execute('INSERT INTO settings(key,value) VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value',('custom_font','/static/fonts/'+name))
+    flash('فونت بارگذاری و برای سایت انتخاب شد.','success')
+    return redirect(url_for('admin_dashboard')+'#settings')
 
 @app.post('/admin/settings')
 @admin_required
 def save_settings():
-    values={key:request.form.get(key,'').strip()[:2000] for key in DEFAULTS if key in request.form}
-    try:
-        bg=save_upload(request.files.get('about_bg_image'))
-        if bg: values['about_bg_image']=bg
-        font_file=request.files.get('custom_font')
-        if font_file and font_file.filename:
-            ext=font_file.filename.rsplit('.',1)[-1].lower() if '.' in font_file.filename else ''
-            if ext not in FONT_ALLOWED: raise ValueError('فرمت فونت باید WOFF2، WOFF، TTF یا OTF باشد.')
-            if font_file.content_length and font_file.content_length > 5*1024*1024: raise ValueError('حجم فونت نباید بیشتر از ۵ مگابایت باشد.')
-            font_name=secrets.token_hex(12)+'.'+ext
-            font_file.save(UPLOAD_DIR/font_name)
-            values['custom_font_url']='/static/uploads/'+font_name
-            values['custom_font_format']=ext
-    except ValueError as e:
-        flash(str(e),'error'); return redirect(url_for('admin_dashboard')+'#settings')
     with db() as con:
-        for key,value in values.items():
-            con.execute('INSERT INTO settings(key,value) VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value',(key,value))
+        for key in DEFAULTS:
+            if key in request.form:
+                value = request.form.get(key, '').strip()[:2000]
+                con.execute('INSERT INTO settings(key,value) VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value',(key,value))
     flash('تنظیمات سایت ذخیره شد.','success')
     return redirect(url_for('admin_dashboard')+'#settings')
-
-@app.post('/admin/blog/image-upload')
-@admin_required
-def blog_image_upload():
-    try: image=save_upload(request.files.get('image'))
-    except ValueError as e: return jsonify({'ok':False,'error':str(e)}),400
-    if not image: return jsonify({'ok':False,'error':'تصویری انتخاب نشده است.'}),400
-    return jsonify({'ok':True,'url':image})
 
 def save_upload(file):
     if not file or not file.filename: return ''
