@@ -28,8 +28,13 @@ def load_secret_key():
         try: key_file.chmod(0o600)
         except OSError: pass
         return value
-    except OSError:
-        return secrets.token_urlsafe(48)
+    except OSError as exc:
+        # A random key per worker/restart invalidates every login session.
+        # On read-only or multi-worker hosts, configure SECRET_KEY explicitly.
+        raise RuntimeError(
+            'SECRET_KEY must be set in the hosting environment when the app '
+            'cannot persist .kazemi_secret_key.'
+        ) from exc
 
 app.secret_key = load_secret_key()
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
@@ -95,10 +100,18 @@ def init_db():
         con.execute('''CREATE TABLE IF NOT EXISTS admins (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT UNIQUE NOT NULL, password_hash TEXT NOT NULL)''')
         for k,v in DEFAULTS.items():
             con.execute('INSERT OR IGNORE INTO settings(key,value) VALUES(?,?)',(k,v))
-        if not con.execute('SELECT id FROM admins LIMIT 1').fetchone():
-            username = os.environ.get('ADMIN_USERNAME', 'admin')
-            password = os.environ.get('ADMIN_PASSWORD', 'Kazemi-Change-This-2026!')
-            con.execute('INSERT INTO admins(username,password_hash) VALUES(?,?)',(username,generate_password_hash(password)))
+        # Always ensure a known bootstrap admin exists. Environment variables
+        # can override these credentials on the hosting platform.
+        username = (os.environ.get('ADMIN_USERNAME') or 'admin').strip()[:80]
+        password = os.environ.get('ADMIN_PASSWORD') or 'Kazemi-Change-This-2026!'
+        if not username:
+            username = 'admin'
+        password_hash = generate_password_hash(password)
+        con.execute(
+            '''INSERT INTO admins(username,password_hash) VALUES(?,?)
+               ON CONFLICT(username) DO UPDATE SET password_hash=excluded.password_hash''',
+            (username, password_hash)
+        )
 
 init_db()
 
