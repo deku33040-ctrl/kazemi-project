@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="{{ settings.seo_description }}">
+<meta name="theme-color" content="#111512"><meta property="og:title" content="{{ settings.seo_title }}">
+<meta property="og:description" content="{{ settings.seo_description }}">
+<link rel="canonical" href="{{ request.url_root.rstrip('/') }}/">
+<title>{{ settings.seo_title }}</title>
+<link rel="stylesheet" href="/static/style.css">
+{% if settings.get("custom_font_url") %}<style>@font-face{font-family:KazemiCustom;src:url("{{settings.custom_font_url}}") format("{{settings.get('custom_font_format','woff2')}}");font-display:swap}</style>{% endif %}
+<style>
+main{display:flex;flex-direction:column}:root{--gold:{{ layout.get('accent','#c7a46b') }};--radius:{{ layout.get('radius',14) }}px}
+body{font-family:{% if settings.get('custom_font_url') %}KazemiCustom,{% endif %}{{ layout.get('font','Vazirmatn') }},Tahoma,Arial,sans-serif}
+.reveal{transition-duration:{{ layout.get('duration',650) }}ms}
+{% if layout.get('transition','fade-up') == 'none' %}.reveal{opacity:1;transform:none}{% elif layout.get('transition') == 'zoom' %}.reveal{transform:scale(.94)}.reveal.visible{transform:scale(1)}{% elif layout.get('transition') == 'slide-left' %}.reveal{transform:translateX(-28px)}.reveal.visible{transform:none}{% elif layout.get('transition') == 'blur' %}.reveal{filter:blur(8px)}.reveal.visible{filter:none}{% elif layout.get('transition') == 'flip' %}.reveal{transform:perspective(700px) rotateY(12deg)}.reveal.visible{transform:none}{% endif %}
+.work-card{border-radius:var(--radius);transition:transform .35s ease,box-shadow .35s ease}
+{% if layout.get('hover_effect','zoom') == 'zoom' %}.work-card:hover{transform:scale(1.045);z-index:2;box-shadow:0 20px 45px #0003}{% elif layout.get('hover_effect') == 'lift' %}.work-card:hover{transform:translateY(-10px);box-shadow:0 20px 45px #0003}{% elif layout.get('hover_effect') == 'tilt' %}.work-card:hover{transform:rotate(-1.5deg) scale(1.025)}{% endif %}
+{% if layout.get('gallery_layout') == 'masonry' %}#projectGrid{display:block;columns:3;column-gap:22px}#projectGrid .work-card{display:inline-block;width:100%;break-inside:avoid;margin:0 0 22px}{% elif layout.get('gallery_layout') == 'slider' %}#projectGrid{display:flex;overflow-x:auto;gap:22px;scroll-snap-type:x mandatory}#projectGrid .work-card{min-width:min(340px,82vw);scroll-snap-align:start}{% endif %}
+{% if layout.get('transition') == 'fade' %}.reveal{transform:none}{% endif %}
+{% for sec in layout.get('hidden',[]) %}#{{sec}}{display:none!important}{% endfor %}
+{% for sec in layout.get('order',[]) %}#{{sec}}{order:{{loop.index}}}{% endfor %}
+{% if layout.get('title_style')=='underline' %}.section-head h2:after,.intro h2:after{content:'';display:block;width:70px;height:2px;background:var(--gold);margin-top:12px}{% elif layout.get('title_style')=='center' %}.section-head{text-align:center;justify-content:center;display:block}.section-head>p{margin:12px auto}{% endif %}
+
+/* نسخه شناور و کارت‌های کاملاً لینک‌دار */
+.service-link{display:flex;align-items:center;gap:22px;color:inherit;text-decoration:none;cursor:pointer;transition:transform .3s,box-shadow .3s,border-color .3s;border-radius:18px;padding:18px 14px;margin:4px 0}
+.service-link:hover{transform:translateY(-7px);box-shadow:0 18px 42px #0002;border-color:var(--gold)}.service-link:after{content:none!important}.work-card-link{display:block;color:inherit;text-decoration:none}.work-card-link .work-photo{min-height:220px}.service-link .service-symbol{flex-shrink:0}
+.about-stone-bg{position:relative;isolation:isolate;overflow:hidden;border-radius:0;margin:40px 0;max-width:none;background:linear-gradient(90deg,rgba(15,20,18,.88),rgba(15,20,18,.65)),var(--about-bg) center/cover no-repeat;box-shadow:0 24px 70px #0003}
+.about-stone-bg:before{content:'';position:absolute;inset:0;background:var(--about-bg) center/cover no-repeat;filter:blur(5px);opacity:.35;z-index:-1;transform:scale(1.04)}
+.about-stone-bg .intro-layout{position:relative;z-index:1}.about-stone-bg,.about-stone-bg h2,.about-stone-bg p,.about-stone-bg .section-label,.about-stone-bg a{color:#fff}
+.work-card,.blog-card,.contact-form,.service-link{transition:transform .35s ease,box-shadow .35s ease}
+.floating-contact{position:fixed;right:18px;bottom:20px;z-index:9999;display:flex;flex-direction:column;gap:11px}.floating-contact a{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;color:#fff;text-decoration:none;font-size:24px;font-weight:bold;box-shadow:0 8px 24px #0004;border:2px solid #ffffffaa;transition:transform .25s}.floating-contact a:hover{transform:translateY(-5px) scale(1.06)}.floating-contact svg{width:25px;height:25px;fill:currentColor}.service-link,.work-card,.blog-card,.contact-form{will-change:transform}.service-link .service-symbol{font-size:0}.service-link .service-symbol:before{content:"";display:block;width:18px;height:18px;border:2px solid currentColor;border-radius:4px;transform:rotate(45deg)}.about-stone-bg{animation:aboutFloat 8s ease-in-out infinite}.about-stone-bg .parallax-layer{position:relative;will-change:transform;transition:transform .16s ease-out}.statement{position:relative;isolation:isolate;overflow:hidden;background:linear-gradient(110deg,rgba(20,27,22,.86),rgba(17,22,18,.9)),var(--statement-bg) center/cover no-repeat}.statement:before{content:'';position:absolute;inset:0;background:var(--statement-bg) center/cover no-repeat;filter:blur(5px);opacity:.28;z-index:-1;transform:scale(1.04)}.deku-credit{color:var(--gold);font-weight:700;letter-spacing:1.5px;text-decoration:none}.deku-credit:hover{opacity:.75}.section{will-change:auto!important;transform:none!important}.section:hover{transform:none!important}.service-link,.work-card,.blog-card,.contact-form{transform:translateZ(0)}.service-link:hover,.work-card:hover,.blog-card:hover,.contact-form:hover{transform:translateY(-6px);box-shadow:0 18px 42px #0002}@keyframes aboutFloat{0%,100%{box-shadow:0 24px 70px #0003}50%{box-shadow:0 32px 85px #0004}}.float-call{background:#183b65}.float-wa{background:#159b58}.float-tg{background:#168fc4}
+@media(max-width:700px){.floating-contact{right:12px;bottom:14px}.floating-contact a{width:46px;height:46px}.about-stone-bg{margin:22px 0;border-radius:0}}
+</style>
+</head>
+<body>
+<div class="top-progress" id="progress"></div>
+<header class="header">
+  <a class="logo" href="#home"><span class="logo-symbol">K</span><span><strong data-key="company">{{settings.company}}</strong><small data-key="slogan">{{settings.slogan}}</small></span></a>
+  <button class="nav-toggle" id="navToggle" aria-label="باز کردن منو">☰</button>
+  <nav id="nav"><a href="#home" >{{settings.nav_home}}</a><a href="/blog" >{{settings.nav_blog}}</a><a href="#services" >{{settings.nav_services}}</a><a href="#projects" >{{settings.nav_projects}}</a><a href="#about" >{{settings.nav_about}}</a><a href="#contact" >{{settings.nav_contact}}</a>{% for pg in pages %}<a href="{{ url_for('custom_page', slug=pg.slug) }}">{{pg.title}}</a>{% endfor %}</nav>
+  <a class="header-call" data-phone-link href="tel:+93700000000">{{settings.header_call_label}}</a>
+</header>
+
+<main>
+<section class="hero" id="home">
+  <div class="hero-grid"></div><div class="hero-copy reveal">
+    <div class="eyebrow"><span></span> {{settings.hero_badge}}</div>
+    <h1 data-key="hero_heading">{{settings.hero_heading}}</h1>
+    <p class="hero-lead" data-key="heroText">{{settings.heroText}}</p>
+    <div class="hero-buttons"><a class="button gold" href="#projects">{{settings.hero_projects_button}}</a><a class="button outline" href="#contact">{{settings.hero_contact_button}}</a></div>
+    <div class="hero-facts"><div><b data-key="experience">۱۰+</b><span>{{settings.experience_label}}</span></div><i></i><div><b data-key="projectsCount">۷۰+</b><span>{{settings.projects_label}}</span></div><i></i><div><b>{{settings.quality_number}}</b><span>{{settings.quality_label}}</span></div></div>
+  </div>
+  <div class="hero-art reveal"><div class="art-glow"></div><div class="stone stone-back"></div><div class="stone stone-main"></div><div class="stone-cut"></div><div class="art-tag"><small>{{settings.hero_art_small}}</small><strong>{{settings.hero_art_title}}</strong></div><div class="art-index">KAZEMI / CONSTRUCTION</div></div>
+  <a class="scroll-down" href="#about">{{settings.hero_scroll_label}}</a>
+</section>
+
+<section class="intro section about-stone-bg" id="about" style="--about-bg:url('{{settings.about_bg_image}}')">
+  <div class="parallax-layer" data-depth="1"><div class="section-label reveal">{{settings.about_label}}</div></div>
+  <div class="intro-layout"><div class="parallax-layer" data-depth="2"><h2 class="reveal" data-key="about_heading">{{settings.about_heading}}</h2></div><div class="parallax-layer" data-depth="3"><div class="intro-copy reveal"><p data-key="aboutText">{{settings.aboutText}}</p><a class="inline-link" href="#contact">{{settings.about_link}}</a></div></div></div>
+</section>
+
+<section class="services section" id="services">
+ <div class="section-head reveal"><div><div class="section-label">{{settings.services_section_label}}</div><h2 data-key="services_heading">{{settings.services_heading}}</h2></div><p>{{settings.services_intro}}</p></div>
+ <div class="service-list">
+  {% for c in categories %}<a class="service reveal service-link" href="{{url_for('service_detail',slug=c.slug)}}"><span class="number">{{ '%02d'|format(loop.index) }}</span><span class="service-symbol">▧</span><div><h3>{{c.title}}</h3><p>{{c.description}}</p></div></a>{% endfor %}
+ </div>
+</section>
+
+<section class="work section" id="projects">
+ <div class="section-head reveal"><div><div class="section-label">{{settings.projects_section_label}}</div><h2 data-key="projects_heading">{{settings.projects_heading}}</h2></div><p>{{settings.projects_intro}}</p></div>
+ <div class="work-grid" id="projectGrid">
+  {% for project in projects[:12] %}<a class="work-card reveal work-card-link" href="{{url_for('project_detail',pid=project.id)}}"><div class="work-photo" {% if project.image %}style="background-image:url('{{project.image}}');background-size:cover;background-position:center"{% endif %}>{% if not project.image %}<span>{{settings.project_image_placeholder}}</span>{% endif %}</div><div class="work-info"><div><small>{{project.category}}</small><h3>{{project.title}}</h3></div><b>{{'%02d'|format(loop.index)}}</b></div></a>{% else %}<p class="muted">{{settings.project_empty}}</p>{% endfor %}
+ </div>
+</section>
+
+<section class="section blog-home" id="blog">
+ <div class="section-head"><div><div class="section-label">{{settings.blog_label}}</div><h2>{{settings.blog_heading}}</h2></div><p>{{settings.blog_intro}}</p></div>
+ <div class="blog-grid">
+ {% for post in blog_posts %}<a class="blog-card reveal" href="/blog/{{post.slug}}"><div class="blog-cover">{% if post.image %}<img src="{{post.image}}" alt="{{post.title}}" loading="lazy">{% else %}<div class="blog-placeholder">K</div>{% endif %}</div><div class="blog-copy"><small>{{post.created_at}}</small><h3>{{post.title}}</h3><p>{{post.excerpt or post.title}}</p><span>{{settings.blog_read_more}}</span></div></a>{% else %}<p class="muted">{{settings.blog_empty}}</p>{% endfor %}
+ </div><p style="text-align:center;margin-top:28px"><a class="button outline" href="/blog">{{settings.blog_all_button}}</a></p>
+</section>
+
+{% for block in home_sections %}<section class="section intro custom-home-section"><div class="section-label">{{settings.custom_section_label}}</div><h2>{{block.title}}</h2><div class="intro-copy" style="white-space:pre-line">{{block.content}}</div></section>{% endfor %}
+<section class="statement" id="statement" style="--statement-bg:url('{{settings.get("statement_bg_image", "")}}')"><div class="quote-mark">“</div><p class="reveal" data-key="quote">{{settings.quote}}</p><small>{{settings.statement_signature}}</small></section>
+
+<section class="contact section" id="contact">
+ <div class="contact-info reveal"><div class="section-label">{{settings.contact_label}}</div><h2 data-key="contact_heading">{{settings.contact_heading}}</h2><p>{{settings.contact_intro}}</p>
+  <div class="contact-lines"><a data-phone-link href="tel:+93700000000"><small>{{settings.phone_label}}</small><b data-key="phone">+93 700 000 000</b></a><a data-whatsapp href="https://wa.me/93700000000" target="_blank" rel="noopener"><small>{{settings.whatsapp_label}}</small><b>{{settings.whatsapp_action}}</b></a><div><small>{{settings.address_label}}</small><b data-key="address">{{settings.address or settings.address_placeholder}}</b></div></div>
+ </div>
+ <form class="contact-form reveal" id="contactForm"><h3>{{settings.contact_form_title}}</h3><label>{{settings.form_name_label}}<input name="name" required placeholder="{{settings.form_name_placeholder}}"></label><label>{{settings.form_phone_label}}<input name="phone" required type="tel" placeholder="{{settings.form_phone_placeholder}}"></label><label>{{settings.form_service_label}}<select name="service">{% for c in categories %}<option>{{c.title}}</option>{% endfor %}<option>{{settings.form_other}}</option></select></label><label>{{settings.form_message_label}}<textarea name="message" rows="3" placeholder="{{settings.form_message_placeholder}}"></textarea></label><button class="button gold" type="submit">{{settings.contact_form_submit}}</button><p class="form-help" id="formHelp">{{settings.contact_form_help}}</p></form>
+</section>
+</main>
+<div class="floating-contact" aria-label="{{settings.floating_label}}">
+<a class="float-call" href="{% if settings.phone %}tel:{{settings.phone|replace(' ','')}}{% else %}#contact{% endif %}" aria-label="تماس" title="تماس"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15 15 0 006.6 6.6l2.2-2.2a1 1 0 011-.24 11 11 0 003.4.54 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1 11 11 0 00.54 3.4 1 1 0 01-.25 1z"/></svg></a>
+<a class="float-wa" href="{% if settings.whatsapp %}https://wa.me/{{settings.whatsapp|replace('+','')|replace(' ','')}}{% else %}#contact{% endif %}" {% if settings.whatsapp %}target="_blank" rel="noopener"{% endif %} aria-label="واتساپ" title="واتساپ"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 3.5A11.8 11.8 0 003.2 19.4L2 22l2.8-.7A11.8 11.8 0 1020.5 3.5zM12 21a9 9 0 01-4.6-1.3l-.3-.2-2.7.7.7-2.6-.2-.3A9 9 0 1112 21zm5-6.7c-.3-.2-1.7-.9-2-.9s-.5-.2-.7.2-.8.9-1 .9-.4 0-.7-.2a8 8 0 01-2.4-2.1c-.2-.3.2-.5.5-.9.1-.2.2-.3.3-.5s0-.4 0-.5l-.9-2c-.2-.5-.5-.4-.7-.4h-.6c-.2 0-.5.1-.8.4s-1 1-1 2.3 1 2.6 1.1 2.8a10 10 0 003.9 3.5c1.5.7 2 .8 2.7.7.8-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.1-1.4s-.3-.3-.6-.5z"/></svg></a>
+<a class="float-tg" href="{% if settings.telegram %}https://t.me/{{settings.telegram|replace('@','')}}{% else %}#contact{% endif %}" {% if settings.telegram %}target="_blank" rel="noopener"{% endif %} aria-label="تلگرام" title="تلگرام"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.8 4.2L18.5 20c-.2 1.1-.8 1.3-1.7.8l-4.7-3.5-2.3 2.2c-.3.3-.5.5-1 .5l.4-4.8 8.8-8c.4-.4-.1-.6-.6-.2L6.5 14l-4.6-1.4c-1-.3-1-1 .2-1.5L20 4.3c.9-.3 1.7.2 1.8-.1z"/></svg></a></div>
+<footer><a class="logo" href="#home"><span class="logo-symbol">K</span><span><strong>{{settings.company}}</strong><small>{{settings.footer_slogan}}</small></span></a><span>© <span id="year"></span> {{settings.company}} — {{settings.footer_copyright}}</span><a href="#home">{{settings.footer_top_label}}</a><a class="deku-credit" href="{{settings.get('footer_credit_url') or '#'}}" {% if settings.get('footer_credit_url') %}target="_blank" rel="noopener noreferrer"{% endif %}>{{settings.get('footer_credit_text','MADE BY DEKU')}}</a><a href="/admin/login" style="opacity:.55;font-size:12px">{{settings.admin_link_label}}</a></footer>
+<script>
+(()=>{const c={{ layout|tojson }};if(!c||!Object.keys(c).length)return;const root=document.documentElement;root.style.setProperty('--accent',c.accent||'#c7a46b');root.style.setProperty('--builder-radius',(c.radius??14)+'px');root.style.setProperty('--builder-font',c.font||'Tahoma');{% if not settings.get('custom_font_url') %}document.body.style.fontFamily='var(--builder-font),Tahoma,Arial,sans-serif';{% endif %}const ids={home:'home',about:'about',services:'services',projects:'projects',statement:'statement',contact:'contact'};const main=document.querySelector('main');(c.order||[]).forEach((key,i)=>{const el=document.getElementById(ids[key]);if(el&&main){el.style.order=i;main.style.display='flex';main.style.flexDirection='column'}});(c.hidden||[]).forEach(key=>{const el=document.getElementById(ids[key]);if(el)el.hidden=true});const style=document.createElement('style');style.textContent=`.reveal{transition:opacity var(--builder-duration,650ms) ease,transform var(--builder-duration,650ms) ease!important}.reveal[data-builder-transition=none]{opacity:1!important;transform:none!important}.reveal[data-builder-transition=fade]{opacity:0}.reveal[data-builder-transition=fade].visible{opacity:1}.reveal[data-builder-transition=fade-up]{opacity:0;transform:translateY(28px)}.reveal[data-builder-transition=fade-up].visible{opacity:1;transform:translateY(0)}.reveal[data-builder-transition=slide-left]{opacity:0;transform:translateX(-35px)}.reveal[data-builder-transition=slide-left].visible{opacity:1;transform:translateX(0)}.reveal[data-builder-transition=zoom]{opacity:0;transform:scale(.94)}.reveal[data-builder-transition=zoom].visible{opacity:1;transform:scale(1)}`;document.head.appendChild(style);document.querySelectorAll('.reveal').forEach(el=>{el.dataset.builderTransition=c.transition||'fade-up';el.style.setProperty('--builder-duration',(c.duration||650)+'ms')});})();
+</script><script src="/static/script.js"></script>
+</body></html>
