@@ -30,7 +30,7 @@ body{font-family:{{ layout.get('font','Vazirmatn') }},Tahoma,Arial,sans-serif}
   <a class="logo" href="#home"><span class="logo-symbol">K</span><span><strong data-key="company">پیمانکاری کاظمی</strong><small data-key="slogan">سنگ‌کاری • نما • اجرای ساختمان</small></span></a>
   <button class="nav-toggle" id="navToggle" aria-label="باز کردن منو">☰</button>
   <nav id="nav"><a href="#home">خانه</a><a href="/blog">مجله کاظمی</a><a href="#services">خدمات</a><a href="#projects">نمونه‌کارها</a><a href="#about">درباره ما</a><a href="#contact">تماس با ما</a>{% for pg in pages %}<a href="{{ url_for('custom_page', slug=pg.slug) }}">{{pg.title}}</a>{% endfor %}</nav>
-  <a class="header-call" data-phone-link href="tel:+93700000000">تماس و مشاوره <span>↙</span></a>
+  <a class="header-call" data-phone-link href="tel:+93700000000">تماس و مشاوره <span></span></a>
 </header>
 
 <main>
@@ -39,7 +39,7 @@ body{font-family:{{ layout.get('font','Vazirmatn') }},Tahoma,Arial,sans-serif}
     <div class="eyebrow"><span></span> تخصص، دقت، ماندگاری</div>
     <h1>سنگ را با هنر<br>و سازه را با <em>اعتماد</em> بسازید.</h1>
     <p class="hero-lead" data-key="heroText">پیمانکاری کاظمی؛ همراه مطمئن شما در اجرای سنگ‌کاری، نمای ساختمان و پروژه‌های ساختمانی، از ایده تا تحویل نهایی.</p>
-    <div class="hero-buttons"><a class="button gold" href="#projects">مشاهده نمونه‌کارها <b>↙</b></a><a class="button outline" href="#contact">درخواست مشاوره</a></div>
+    <div class="hero-buttons"><a class="button gold" href="#projects">مشاهده نمونه‌کارها <b></b></a><a class="button outline" href="#contact">درخواست مشاوره</a></div>
     <div class="hero-facts"><div><b data-key="experience">۱۰+</b><span>سال تجربه</span></div><i></i><div><b data-key="projectsCount">۷۰+</b><span>پروژه اجراشده</span></div><i></i><div><b>۱۰۰٪</b><span>تعهد به کیفیت</span></div></div>
   </div>
   <div class="hero-art reveal"><div class="art-glow"></div><div class="stone stone-back"></div><div class="stone stone-main"></div><div class="stone-cut"></div><div class="art-tag"><small>پیمانکاری کاظمی</small><strong>کیفیت در جزئیات است</strong></div><div class="art-index">KAZEMI / CONSTRUCTION</div></div>
@@ -48,13 +48,13 @@ body{font-family:{{ layout.get('font','Vazirmatn') }},Tahoma,Arial,sans-serif}
 
 <section class="intro section" id="about">
   <div class="section-label reveal">۰۱ / درباره پیمانکاری کاظمی</div>
-  <div class="intro-layout"><h2 class="reveal">ساختن فقط اجرا نیست؛<br><em>تعهد به نتیجه است.</em></h2><div class="intro-copy reveal"><p data-key="aboutText">در پیمانکاری کاظمی، هر پروژه با شناخت نیاز کارفرما، انتخاب مصالح مناسب و برنامه‌ریزی دقیق آغاز می‌شود. هدف ما اجرای تمیز، اصولی و ماندگار است؛ از جزئیات سنگ‌کاری تا مدیریت مراحل ساختمان.</p><a class="inline-link" href="#contact">برای شروع همکاری با ما تماس بگیرید <span>↙</span></a></div></div>
+  <div class="intro-layout"><h2 class="reveal">ساختن فقط اجرا نیست؛<br><em>تعهد به نتیجه است.</em></h2><div class="intro-copy reveal"><p data-key="aboutText">در پیمانکاری کاظمی، هر پروژه با شناخت نیاز کارفرما، انتخاب مصالح مناسب و برنامه‌ریزی دقیق آغاز می‌شود. هدف ما اجرای تمیز، اصولی و ماندگار است؛ از جزئیات سنگ‌کاری تا مدیریت مراحل ساختمان.</p><a class="inline-link" href="#contact">برای شروع همکاری با ما تماس بگیرید <span></span></a></div></div>
 </section>
 
 <section class="services section" id="services">
  <div class="section-head reveal"><div><div class="section-label">۰۲ / خدمات ما</div><h2>تخصص‌هایی برای <em>ساخت بهتر</em></h2></div><p>خدمات اجرایی با توجه به کیفیت مصالح، دقت نصب و نیاز واقعی هر پروژه.</p></div>
  <div class="service-list">
-  {% for c in categories %}<a class="service reveal service-full-link" href="{{url_for('service_detail',slug=c.slug)}}"><span class="number">{{ '%02d'|format(loop.index) }}</span><span class="service-symbol">▧</span><div><h3>{{c.title}}</h3><p>{{c.description}}</p></div><span class="service-arrow" aria-hidden="true">↙</span></a>{% endfor %}
+  {% for c in categories %}<a class="service reveal service-full-link" href="{{url_for('service_detail',slug=c.slug)}}"><span class="number">{{ '%02d'|format(loop.index) }}</span><span class="service-symbol">▧</span><div><h3>{{c.title}}</h3><p>{{c.description}}</p></div></a>{% endfor %}
  </div>
 </section>
 
@@ -69,7 +69,7 @@ body{font-family:{{ layout.get('font','Vazirmatn') }},Tahoma,Arial,sans-serif}
 <section class="section blog-home" id="blog">
  <div class="section-head"><div><div class="section-label">دانش و تجربه</div><h2>مجله <em>کاظمی</em></h2></div><p>راهنماها، تجربه‌های اجرایی و نکات کاربردی درباره سنگ‌کاری و ساختمان.</p></div>
  <div class="blog-grid">
- {% for post in blog_posts %}<a class="blog-card reveal" href="/blog/{{post.slug}}"><div class="blog-cover">{% if post.image %}<img src="{{post.image}}" alt="{{post.title}}" loading="lazy">{% else %}<div class="blog-placeholder">K</div>{% endif %}</div><div class="blog-copy"><small>{{post.created_at}}</small><h3>{{post.title}}</h3><p>{{post.excerpt or post.title}}</p><span>ادامه مطلب ←</span></div></a>{% else %}<p class="muted">مقاله‌های جدید به‌زودی منتشر می‌شوند.</p>{% endfor %}
+ {% for post in blog_posts %}<a class="blog-card reveal" href="/blog/{{post.slug}}"><div class="blog-cover">{% if post.image %}<img src="{{post.image}}" alt="{{post.title}}" loading="lazy">{% else %}<div class="blog-placeholder">K</div>{% endif %}</div><div class="blog-copy"><small>{{post.created_at}}</small><h3>{{post.title}}</h3><p>{{post.excerpt or post.title}}</p><span>ادامه مطلب </span></div></a>{% else %}<p class="muted">مقاله‌های جدید به‌زودی منتشر می‌شوند.</p>{% endfor %}
  </div><p style="text-align:center;margin-top:28px"><a class="button outline" href="/blog">مشاهده همه مقاله‌ها</a></p>
 </section>
 
@@ -78,9 +78,9 @@ body{font-family:{{ layout.get('font','Vazirmatn') }},Tahoma,Arial,sans-serif}
 
 <section class="contact section" id="contact">
  <div class="contact-info reveal"><div class="section-label">۰۴ / تماس و مشاوره</div><h2>پروژه‌تان را<br><em>با ما شروع کنید.</em></h2><p>برای دریافت مشاوره، برآورد اولیه یا هماهنگی بازدید از پروژه با ما در تماس باشید.</p>
-  <div class="contact-lines"><a data-phone-link href="tel:+93700000000"><small>شماره تماس</small><b data-key="phone">+93 700 000 000</b></a><a data-whatsapp href="https://wa.me/93700000000" target="_blank" rel="noopener"><small>واتساپ</small><b>ارسال پیام در واتساپ ↙</b></a><div><small>موقعیت / آدرس</small><b data-key="address">آدرس محل فعالیت را وارد کنید</b></div></div>
+  <div class="contact-lines"><a data-phone-link href="tel:+93700000000"><small>شماره تماس</small><b data-key="phone">+93 700 000 000</b></a><a data-whatsapp href="https://wa.me/93700000000" target="_blank" rel="noopener"><small>واتساپ</small><b>ارسال پیام در واتساپ </b></a><div><small>موقعیت / آدرس</small><b data-key="address">آدرس محل فعالیت را وارد کنید</b></div></div>
  </div>
- <form class="contact-form reveal" id="contactForm"><h3>درخواست مشاوره</h3><label>نام و نام خانوادگی<input name="name" required placeholder="نام شما"></label><label>شماره تماس<input name="phone" required type="tel" placeholder="شماره‌ای که با آن تماس بگیریم"></label><label>موضوع پروژه<select name="service">{% for c in categories %}<option>{{c.title}}</option>{% endfor %}<option>سایر</option></select></label><label>توضیحات پروژه<textarea name="message" rows="3" placeholder="نوع پروژه، محل و توضیحات کوتاه..."></textarea></label><button class="button gold" type="submit">ارسال درخواست <b>↙</b></button><p class="form-help" id="formHelp">با زدن دکمه، پیام در واتساپ شما آماده ارسال می‌شود.</p></form>
+ <form class="contact-form reveal" id="contactForm"><h3>درخواست مشاوره</h3><label>نام و نام خانوادگی<input name="name" required placeholder="نام شما"></label><label>شماره تماس<input name="phone" required type="tel" placeholder="شماره‌ای که با آن تماس بگیریم"></label><label>موضوع پروژه<select name="service">{% for c in categories %}<option>{{c.title}}</option>{% endfor %}<option>سایر</option></select></label><label>توضیحات پروژه<textarea name="message" rows="3" placeholder="نوع پروژه، محل و توضیحات کوتاه..."></textarea></label><button class="button gold" type="submit">ارسال درخواست <b></b></button><p class="form-help" id="formHelp">با زدن دکمه، پیام در واتساپ شما آماده ارسال می‌شود.</p></form>
 </section>
 </main>
 <footer><a class="logo" href="#home"><span class="logo-symbol">K</span><span><strong>پیمانکاری کاظمی</strong><small>سنگ‌کاری • نما • اجرای ساختمان</small></span></a><span>© <span id="year"></span> پیمانکاری کاظمی</span><a href="{{settings.get("maker_url","#")}}" target="_blank" rel="noopener">{{settings.get("maker_text","MADE BY DEKU")}}</a><a href="/admin/login" style="opacity:.55;font-size:12px">ورود مدیر</a></footer>
@@ -93,17 +93,17 @@ section.addEventListener('pointermove',e=>{const r=section.getBoundingClientRect
 section.addEventListener('pointerleave',()=>{section.style.setProperty('--parallax-x','0px');section.style.setProperty('--parallax-y','0px')});
 })();
 </script>
-<!-- Floating contact shortcuts -->
-<div class="floating-contact" aria-label="راه‌های ارتباطی">
-  <a class="floating-contact__link floating-contact__whatsapp" data-whatsapp href="https://wa.me/93700000000" target="_blank" rel="noopener noreferrer" aria-label="واتساپ" title="واتساپ">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 3.5A11.8 11.8 0 0 0 2 17.7L.5 23.5l6-1.6A11.8 11.8 0 1 0 20.5 3.5ZM12 21a9.2 9.2 0 0 1-4.7-1.3l-.4-.2-3.5.9.9-3.4-.2-.4A9.2 9.2 0 1 1 12 21Zm5.1-6.9c-.3-.2-1.7-.9-2-.9s-.5-.2-.7.2-.8.9-1 1.1-.4.2-.7.1a7.5 7.5 0 0 1-2.2-1.4 8.2 8.2 0 0 1-1.5-1.9c-.2-.3 0-.5.1-.7l.5-.6.2-.5c.1-.2 0-.4 0-.6l-.9-2.1c-.2-.5-.5-.4-.7-.4h-.6c-.2 0-.6.1-.9.4s-1.2 1.2-1.2 2.8 1.2 3.2 1.4 3.4a11 11 0 0 0 4.2 3.7c.6.3 1.1.5 1.5.6.6.2 1.2.2 1.6.1.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.3.1-1.4s-.2-.2-.5-.4Z"/></svg>
-  </a>
-  <a class="floating-contact__link floating-contact__phone" data-phone-link href="tel:+93700000000" aria-label="تماس تلفنی" title="تماس تلفنی">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.5 15.5 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.2 11 11 0 0 0 3.4.5 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17.8 17.8 0 0 1 3 3a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1 11 11 0 0 0 .5 3.4 1 1 0 0 1-.2 1Z"/></svg>
-  </a>
-  <a class="floating-contact__link floating-contact__telegram" data-telegram href="https://t.me/" target="_blank" rel="noopener noreferrer" aria-label="تلگرام" title="تلگرام">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21.8 3.2-3.3 17.1c-.2 1.2-.9 1.5-1.9.9l-5.2-3.8-2.5 2.4c-.3.3-.5.5-1 .5l.4-5.3 9.7-8.8c.4-.4-.1-.6-.6-.2L5.4 13.6.3 12c-1.1-.3-1.1-1.1.2-1.6L20.4 2.7c.9-.3 1.7.2 1.4.5Z"/></svg>
-  </a>
-</div>
 
+<!-- Fixed contact shortcuts -->
+<nav class="floating-contact" aria-label="راه‌های ارتباطی" dir="ltr">
+ <a class="floating-contact__link floating-contact__whatsapp" data-whatsapp href="https://wa.me/93700000000" target="_blank" rel="noopener noreferrer" aria-label="واتساپ" title="واتساپ">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 3.5A11.8 11.8 0 0 0 2 17.7L.5 23.5l6-1.6A11.8 11.8 0 1 0 20.5 3.5ZM12 21a9.2 9.2 0 0 1-4.7-1.3l-.4-.2-3.5.9.9-3.4-.2-.4A9.2 9.2 0 1 1 12 21Zm5.1-6.9c-.3-.2-1.7-.9-2-.9s-.5-.2-.7.2-.8.9-1 1.1-.4.2-.7.1a7.5 7.5 0 0 1-2.2-1.4 8.2 8.2 0 0 1-1.5-1.9c-.2-.3 0-.5.1-.7l.5-.6.2-.5c.1-.2 0-.4 0-.6l-.9-2.1c-.2-.5-.5-.4-.7-.4h-.6c-.2 0-.6.1-.9.4s-1.2 1.2-1.2 2.8 1.2 3.2 1.4 3.4a11 11 0 0 0 4.2 3.7c.6.3 1.1.5 1.5.6.6.2 1.2.2 1.6.1.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.3.1-1.4s-.2-.2-.5-.4Z"/></svg><span>واتساپ</span>
+ </a>
+ <a class="floating-contact__link floating-contact__phone" data-phone-link href="tel:+93700000000" aria-label="تماس تلفنی" title="تماس تلفنی">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.5 15.5 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.2 11 11 0 0 0 3.4.5 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17.8 17.8 0 0 1 3 3a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1 11 11 0 0 0 .5 3.4 1 1 0 0 1-.2 1Z"/></svg><span>تماس</span>
+ </a>
+ <a class="floating-contact__link floating-contact__telegram" data-telegram href="https://t.me/" target="_blank" rel="noopener noreferrer" aria-label="تلگرام" title="تلگرام">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21.8 3.2-3.3 17.1c-.2 1.2-.9 1.5-1.9.9l-5.2-3.8-2.5 2.4c-.3.3-.5.5-1 .5l.4-5.3 9.7-8.8c.4-.4-.1-.6-.6-.2L5.4 13.6.3 12c-1.1-.3-1.1-1.1.2-1.6L20.4 2.7c.9-.3 1.7.2 1.4.5Z"/></svg><span>تلگرام</span>
+ </a>
+</nav>
 </body></html>

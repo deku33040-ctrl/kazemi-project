@@ -32,7 +32,8 @@ async function loadSite(){
     const response=await fetch('/api/public'); if(!response.ok)throw new Error('api');
     const data=await response.json(); const s=data.settings||{};
     ['company','slogan','heroText','aboutText','quote','experience','projectsCount','phone','address'].forEach(k=>setText(k,s[k]));
-    if(s.phone){const digits=s.phone.replace(/\D/g,'');document.querySelectorAll('[data-phone-link]').forEach(a=>a.href='tel:'+digits);document.querySelectorAll('[data-whatsapp]').forEach(a=>a.href='https://wa.me/'+digits)}
+    if(s.phone){const digits=s.phone.replace(/\\D/g,'');document.querySelectorAll('[data-phone-link]').forEach(a=>a.href='tel:'+digits);document.querySelectorAll('[data-whatsapp]').forEach(a=>a.href='https://wa.me/'+digits)}
+    if(s.telegram){let tg=s.telegram.trim();if(!tg.startsWith('https://')&&!tg.startsWith('http://'))tg='https://t.me/'+tg.replace(/^@/,'').replace(/^\/+/, '');document.querySelectorAll('[data-telegram]').forEach(a=>a.href=tg)}
     applyProjects(data.projects);
     setupProjectSearch();
   }catch(e){console.warn('بارگذاری اطلاعات سایت انجام نشد:',e)}
