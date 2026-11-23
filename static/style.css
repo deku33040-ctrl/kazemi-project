@@ -33,3 +33,24 @@ footer{padding:27px 7vw;border-top:1px solid var(--line);display:flex;align-item
 @media(max-width:750px){.blog-grid,.blog-list{grid-template-columns:1fr}.blog-cover{height:230px}}
 /* Prevent hidden content when JavaScript fails to load */
 .reveal{opacity:1;transform:none}.js-enabled .reveal{opacity:0;transform:translateY(25px)}.js-enabled .reveal.visible{opacity:1;transform:none}
+
+/* Release improvements */
+.service-full-link{grid-template-columns:70px 65px 1fr 35px;color:inherit;text-decoration:none}
+.service-full-link .service-arrow{color:var(--gold);font-size:20px;transition:transform .25s}
+.service-full-link:hover .service-arrow{transform:translate(-4px,-4px)}
+#about{background-position:calc(50% + var(--parallax-x,0px)) calc(50% + var(--parallax-y,0px))}
+.blog-body img{max-width:100%;height:auto;border-radius:12px;margin:18px auto;display:block}
+.blog-body h2,.blog-body h3{color:var(--gold);margin-top:28px}
+.blog-body a{color:var(--gold);text-decoration:underline}
+@media(max-width:650px){.service-full-link{grid-template-columns:35px 38px 1fr 20px}}
+
+
+/* Floating WhatsApp, phone and Telegram shortcuts */
+.floating-contact{position:fixed;z-index:9999;right:20px;bottom:22px;display:flex;flex-direction:column;gap:11px}
+.floating-contact__link{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;color:#fff;text-decoration:none;box-shadow:0 5px 18px #0005;border:1px solid #ffffff30;transition:transform .2s ease,filter .2s ease}
+.floating-contact__link:hover{transform:translateY(-3px) scale(1.05);filter:brightness(1.08)}
+.floating-contact__link svg{width:25px;height:25px;fill:currentColor}
+.floating-contact__whatsapp{background:#20b968}
+.floating-contact__phone{background:#c49a5a}
+.floating-contact__telegram{background:#229ed9}
+@media(max-width:600px){.floating-contact{right:13px;bottom:14px;gap:9px}.floating-contact__link{width:46px;height:46px}.floating-contact__link svg{width:22px;height:22px}}
