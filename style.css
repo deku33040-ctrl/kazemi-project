@@ -14,19 +14,4 @@ footer{padding:27px 7vw;border-top:1px solid var(--line);display:flex;align-item
 @media(max-width:900px){.header{padding:0 5vw}.hero{padding:70px 7vw}.section{padding:80px 7vw}.work-photo{height:220px}.work-feature .work-photo{height:280px}}
 @media(max-width:650px){.header{height:70px}.nav-toggle{display:block;order:3}.header-call{margin-left:auto;margin-right:12px;padding:6px 9px;font-size:9px}nav{display:none;position:absolute;top:70px;right:0;left:0;background:#171c17;padding:18px 7vw;flex-direction:column;gap:12px;border-bottom:1px solid var(--line)}nav.open{display:flex}.logo strong{font-size:12px}.logo small{font-size:8px}.logo-symbol{width:32px;height:32px}.hero{grid-template-columns:1fr;padding-top:55px;min-height:auto}.hero h1{font-size:49px}.hero-art{height:320px;margin-top:20px}.hero-facts{gap:17px;margin-top:38px}.hero-facts b{font-size:19px}.intro-layout,.contact{grid-template-columns:1fr;gap:20px}.section-head{display:block}.section-head>p{margin-top:15px}.service{grid-template-columns:35px 38px 1fr 20px;gap:10px;padding:19px 2px}.service h3{font-size:13px}.service p{font-size:10px}.service-symbol{font-size:25px}.work-grid{grid-template-columns:1fr}.work-photo,.work-feature .work-photo{height:245px}.statement{padding:65px 15px}.contact-form{padding:22px}footer{flex-wrap:wrap}.scroll-down{display:none}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
-/* حذف فلش‌های تزئینی خدمات، نمونه‌کارها و تماس */
-a::after,
-.service-link::after,
-.work-card-link::after,
-.contact-link::after,
-.consultation-link::after {
-    content: none !important;
-    display: none !important;
-}
 
-.arrow,
-.service-arrow,
-.work-arrow,
-.link-arrow {
-    display: none !important;
-}
