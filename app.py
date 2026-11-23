@@ -41,7 +41,7 @@ DEFAULTS = {
  'heroText':'پیمانکاری کاظمی؛ همراه مطمئن شما در اجرای سنگ‌کاری، نمای ساختمان و پروژه‌های ساختمانی، از ایده تا تحویل نهایی.',
  'aboutText':'در پیمانکاری کاظمی، هر پروژه با شناخت نیاز کارفرما، انتخاب مصالح مناسب و برنامه‌ریزی دقیق آغاز می‌شود. هدف ما اجرای تمیز، اصولی و ماندگار است.',
  'quote':'اعتماد با حرف ساخته نمی‌شود؛ با کیفیت کار، ماندگار می‌شود.',
- 'experience':'۱۰+', 'projectsCount':'۷۰+', 'phone':'', 'address':'',
+ 'experience':'۱۰+', 'projectsCount':'۷۰+', 'phone':'', 'telegram':'', 'address':'',
  'seo_title':'پیمانکاری کاظمی | سنگ‌کاری و اجرای ساختمان',
  'seo_description':'اجرای تخصصی سنگ‌کاری، نمای ساختمان، بازسازی و پیمانکاری ساختمان در ایران.', 'accent_color':'#c7a46b', 'home_projects_limit':'12', 'seo_city':'', 'visual_layout':'{}', 'custom_font':'', 'about_bg_image':'', 'statement_bg_image':'', 'maker_text':'MADE BY DEKU', 'maker_url':'#'
 }

@@ -92,4 +92,18 @@ body{font-family:{{ layout.get('font','Vazirmatn') }},Tahoma,Arial,sans-serif}
 section.addEventListener('pointermove',e=>{const r=section.getBoundingClientRect();const x=(e.clientX-r.left)/r.width-.5;const y=(e.clientY-r.top)/r.height-.5;section.style.setProperty('--parallax-x',(x*8).toFixed(2)+'px');section.style.setProperty('--parallax-y',(y*6).toFixed(2)+'px')});
 section.addEventListener('pointerleave',()=>{section.style.setProperty('--parallax-x','0px');section.style.setProperty('--parallax-y','0px')});
 })();
-</script></body></html>
+</script>
+<!-- Floating contact shortcuts -->
+<div class="floating-contact" aria-label="راه‌های ارتباطی">
+  <a class="floating-contact__link floating-contact__whatsapp" data-whatsapp href="https://wa.me/93700000000" target="_blank" rel="noopener noreferrer" aria-label="واتساپ" title="واتساپ">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 3.5A11.8 11.8 0 0 0 2 17.7L.5 23.5l6-1.6A11.8 11.8 0 1 0 20.5 3.5ZM12 21a9.2 9.2 0 0 1-4.7-1.3l-.4-.2-3.5.9.9-3.4-.2-.4A9.2 9.2 0 1 1 12 21Zm5.1-6.9c-.3-.2-1.7-.9-2-.9s-.5-.2-.7.2-.8.9-1 1.1-.4.2-.7.1a7.5 7.5 0 0 1-2.2-1.4 8.2 8.2 0 0 1-1.5-1.9c-.2-.3 0-.5.1-.7l.5-.6.2-.5c.1-.2 0-.4 0-.6l-.9-2.1c-.2-.5-.5-.4-.7-.4h-.6c-.2 0-.6.1-.9.4s-1.2 1.2-1.2 2.8 1.2 3.2 1.4 3.4a11 11 0 0 0 4.2 3.7c.6.3 1.1.5 1.5.6.6.2 1.2.2 1.6.1.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.3.1-1.4s-.2-.2-.5-.4Z"/></svg>
+  </a>
+  <a class="floating-contact__link floating-contact__phone" data-phone-link href="tel:+93700000000" aria-label="تماس تلفنی" title="تماس تلفنی">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.5 15.5 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.2 11 11 0 0 0 3.4.5 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17.8 17.8 0 0 1 3 3a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1 11 11 0 0 0 .5 3.4 1 1 0 0 1-.2 1Z"/></svg>
+  </a>
+  <a class="floating-contact__link floating-contact__telegram" data-telegram href="https://t.me/" target="_blank" rel="noopener noreferrer" aria-label="تلگرام" title="تلگرام">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21.8 3.2-3.3 17.1c-.2 1.2-.9 1.5-1.9.9l-5.2-3.8-2.5 2.4c-.3.3-.5.5-1 .5l.4-5.3 9.7-8.8c.4-.4-.1-.6-.6-.2L5.4 13.6.3 12c-1.1-.3-1.1-1.1.2-1.6L20.4 2.7c.9-.3 1.7.2 1.4.5Z"/></svg>
+  </a>
+</div>
+
+</body></html>
